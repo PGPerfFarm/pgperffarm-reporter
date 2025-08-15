@@ -5,7 +5,7 @@ use std::process::Command;
 
 use regex::Regex;
 
-use actix_files::NamedFile;
+use actix_files::{Files, NamedFile};
 use actix_web::{get, web, App, HttpRequest, HttpResponse, HttpServer, Result};
 
 use chrono::{TimeZone, Utc};
@@ -513,6 +513,7 @@ async fn main() -> std::io::Result<()> {
             .service(home)
             .service(pf_test)
             .service(pf_test_plant)
+            .service(Files::new("/static", "static"))
     })
     .bind((app_config.listen_address, app_config.port))?
     .run()
