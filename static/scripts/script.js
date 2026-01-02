@@ -15,6 +15,8 @@
  * @property {string} revision - The git commit hash.
  * @property {Date} ctime - The timestamp of the data point.
  * @property {number} metric - The measured performance metric.
+ * @property {number} builder_id - The ID of the plant aka buildbot builder id.
+ * @property {number} build_number - The build number aka ID of the test.
  */
 let allData = [];
 
@@ -127,6 +129,8 @@ function transformChartData(nestedData) {
             revision: result.revision,
             ctime: new Date(result.ctime * 1000), // Convert UNIX timestamp to Date
             metric: +result.metric,
+            builder_id: result.builder_id,
+            build_number: result.build_number,
           });
         });
       }
@@ -660,10 +664,14 @@ function setupTooltip(circles, colorScale) {
              <span class="version-value">${d.metric.toFixed(2)}</span>
            </div>
            <div class="commit-details">
-             <strong>Revision:</strong> ${d.revision.substring(0, 10)}...<br>
              <a href="https://github.com/postgres/postgres/commit/${
                d.revision
-             }" target="_blank">View on GitHub</a>
+             }" target="_blank">Commit ${d.revision.substring(0, 8)}</a><br>
+             <a href="http://140.211.11.131:8010/#/builders/${
+               d.builder_id
+             }/builds/${
+               d.build_number
+             }" target="_blank">Test results</a>
            </div>`
         )
         .classed('show', true);
